@@ -5,7 +5,7 @@ if ! [ -x "$(command -v docker-compose)" ]; then
   exit 1
 fi
 
-domains=(pledgeqa.com www.pledgeqa.com)
+domains=(payments.pledgeqa.com www.payments.pledgeqa.com)
 rsa_key_size=4096
 data_path="./extra/certbot"
 email="jeremy@getlago.com" # Adding a valid address is strongly recommended
