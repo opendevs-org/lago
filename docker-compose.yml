@@ -5,6 +5,11 @@ volumes:
   lago_redis_data:
   lago_storage_data:
 
+networks:
+  lago-webapp:
+    name: lago-webapp
+    driver: bridge
+
 services:
   db:
     image: postgres:14-alpine
@@ -46,7 +51,7 @@ services:
       start_period: 30s
       timeout: 60s
       # uncomment for a potentially faster startup if you have docker --version > 25.0.0
-      # start_interval: 2s
+      start_interval: 2s
     environment:
       - LAGO_API_URL=${LAGO_API_URL:-http://localhost:3000}
       - DATABASE_URL=postgresql://${POSTGRES_USER:-lago}:${POSTGRES_PASSWORD:-changeme}@${POSTGRES_HOST:-db}:${POSTGRES_PORT:-5432}/${POSTGRES_DB:-lago}?search_path=${POSTGRES_SCHEMA:-public}
@@ -88,6 +93,11 @@ services:
       - ./gcs_keyfile.json:/app/gcs_keyfile.json
     ports:
       - ${API_PORT:-3000}:3000
+    expose:
+      - 3000
+    networks:
+      - default
+      - lago-webapp
 
   front:
     container_name: lago-front
@@ -120,6 +130,9 @@ services:
     #   - ./extra/ssl/nginx-selfsigned.crt:/etc/ssl/certs/nginx-selfsigned.crt
     #   - ./extra/ssl/nginx-selfsigned.key:/etc/ssl/private/nginx-selfsigned.key
     #   - ./extra/ssl/dhparam.pem:/etc/ssl/certs/dhparam.pem
+    networks:
+      - default
+      - lago-webapp
 
   # Only used for SSL support with Let's Encrypt
   certbot:
