@@ -108,7 +108,7 @@ services:
       - NANGO_SECRET_KEY=${NANGO_SECRET_KEY}
     ports:
       - ${FRONT_PORT:-80}:80
-    #  - 443:443
+      - 443:443
     # Using SSL with Let's Encrypt
     volumes:
       - ./extra/nginx-letsencrypt.conf:/etc/nginx/conf.d/default.conf
