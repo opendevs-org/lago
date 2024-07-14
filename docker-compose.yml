@@ -39,7 +39,9 @@ services:
 
   api:
     container_name: lago-api
-    image: getlago/api:v1.6.4
+    # image: getlago/api:v1.6.4
+    build:
+      context: ./api
     restart: unless-stopped
     depends_on:
       - db
@@ -144,7 +146,9 @@ services:
 
   api-worker:
     container_name: lago-worker
-    image: getlago/api:v1.6.4
+    # image: getlago/api:v1.6.4
+    build:
+      context: ./api
     restart: unless-stopped
     depends_on:
       api:
