@@ -199,6 +199,8 @@ services:
       # - SIDEKIQ_PDFS=true
     volumes:
       - lago_storage_data:/app/storage
+      # If using GCS, you need to put the credentials keyfile here
+      - ./gcs_keyfile.json:/app/gcs_keyfile.json
 
   # You can uncomment this if you want to use a dedicated Sidekiq worker for the event ingestion.
   # It is recommendend if you have a high usage of events to not impact the other Sidekiq Jobs.
