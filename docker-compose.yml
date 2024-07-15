@@ -5,6 +5,7 @@ volumes:
   lago_redis_data:
   lago_storage_data:
 
+
 networks:
   lago-webapp:
     name: lago-webapp
@@ -46,7 +47,7 @@ services:
     depends_on:
       - db
       - redis
-    command: ["./scripts/start.sh"]
+    command: [ "./scripts/start.sh" ]
     healthcheck:
       test: curl -f http://localhost:3000/health || exit 1
       interval: 10s
@@ -87,6 +88,8 @@ services:
       - LAGO_OAUTH_PROXY_URL=https://proxy.getlago.com
       - LAGO_LICENSE=${LAGO_LICENSE:-}
       - NANGO_SECRET_KEY=${NANGO_SECRET_KEY}
+      - GOOGLE_AUTH_CLIENT_ID=${GOOGLE_AUTH_CLIENT_ID}
+      - GOOGLE_AUTH_CLIENT_SECRET=${GOOGLE_AUTH_CLIENT_SECRET}
       # - SIDEKIQ_EVENTS=true
       # - SIDEKIQ_PDFS=true
     volumes:
@@ -153,9 +156,13 @@ services:
     depends_on:
       api:
         condition: service_healthy
-    command: ["./scripts/start.worker.sh"]
+    command: [ "./scripts/start.worker.sh" ]
     healthcheck:
-      test: ["CMD-SHELL", "bundle exec sidekiqmon | grep $(hostname) || exit 1"]
+      test:
+        [
+          "CMD-SHELL",
+          "bundle exec sidekiqmon | grep $(hostname) || exit 1"
+        ]
     environment:
       - LAGO_API_URL=${LAGO_API_URL:-http://localhost:3000}
       - DATABASE_URL=postgresql://${POSTGRES_USER:-lago}:${POSTGRES_PASSWORD:-changeme}@${POSTGRES_HOST:-db}:${POSTGRES_PORT:-5432}/${POSTGRES_DB:-lago}?search_path=${POSTGRES_SCHEMA:-public}
@@ -186,6 +193,8 @@ services:
       - LAGO_DISABLE_SEGMENT=${LAGO_DISABLE_SEGMENT}
       - LAGO_DISABLE_WALLET_REFRESH=${LAGO_DISABLE_WALLET_REFRESH}
       - NANGO_SECRET_KEY=${NANGO_SECRET_KEY}
+      - GOOGLE_AUTH_CLIENT_ID=${GOOGLE_AUTH_CLIENT_ID}
+      - GOOGLE_AUTH_CLIENT_SECRET=${GOOGLE_AUTH_CLIENT_SECRET}
       # - SIDEKIQ_EVENTS=true
       # - SIDEKIQ_PDFS=true
     volumes:
@@ -282,7 +291,7 @@ services:
     depends_on:
       api:
         condition: service_healthy
-    command: ["./scripts/start.clock.sh"]
+    command: [ "./scripts/start.clock.sh" ]
     environment:
       - LAGO_API_URL=${LAGO_API_URL:-http://localhost:3000}
       - DATABASE_URL=postgresql://${POSTGRES_USER:-lago}:${POSTGRES_PASSWORD:-changeme}@${POSTGRES_HOST:-db}:${POSTGRES_PORT:-5432}/${POSTGRES_DB:-lago}?search_path=${POSTGRES_SCHEMA:-public}
